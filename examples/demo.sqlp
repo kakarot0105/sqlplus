@@ -1,0 +1,13 @@
+-- Demo SQL+ example
+
+IF 1=1 THEN
+  CREATE TABLE t (i INTEGER);
+  INSERT INTO t VALUES (1), (2);
+ELSE
+  CREATE TABLE t (i INTEGER);
+  INSERT INTO t VALUES (99);
+END IF;
+
+-- Plain SQL continues
+SELECT COUNT(*) AS c FROM t;
+

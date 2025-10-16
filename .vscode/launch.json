@@ -1,0 +1,23 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Pytest",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/.venv/bin/pytest",
+      "args": ["-q"],
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Run example (sqlp run)",
+      "type": "python",
+      "request": "launch",
+      "module": "sqlp.cli",
+      "args": ["run", "examples/demo.sqlp", "--verbose"],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}
+

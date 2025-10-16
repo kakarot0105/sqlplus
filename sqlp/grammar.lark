@@ -1,0 +1,32 @@
+// Lark grammar for SQL+ (minimal)
+// Focus: top-level IF ... THEN ... ELSE ... END IF; and raw SQL passthrough.
+
+%import common.NEWLINE
+%import common.WS
+%ignore WS
+
+// Case-insensitive keywords
+IF: /(?i)IF/
+THEN: /(?i)THEN/
+ELSE: /(?i)ELSE/
+END: /(?i)END/
+SEMI: ";"
+
+// Condition text: one or more chars up to THEN (tempered dot, avoids zero-width)
+COND_TEXT: /(?is)(?:(?!\b(?i:THEN)\b).)+/
+
+// Raw SQL up to semicolon, not starting with IF/ELSE/END
+RAWSQL: /(?is)(?!\s*(?i:(IF|ELSE|END)\b))[^;]+/
+
+start: stmt*
+
+?stmt: if_stmt
+     | raw_stmt
+
+if_stmt: IF cond THEN stmt* else_part? END IF SEMI
+
+else_part: ELSE stmt*
+
+cond: COND_TEXT
+
+raw_stmt: RAWSQL SEMI

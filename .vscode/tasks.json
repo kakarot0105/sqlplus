@@ -1,0 +1,30 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Create venv",
+      "type": "shell",
+      "command": "python -m venv .venv && . .venv/bin/activate && pip install -e .[dev]",
+      "problemMatcher": []
+    },
+    {
+      "label": "Run example",
+      "type": "shell",
+      "command": ". .venv/bin/activate && sqlp run examples/demo.sqlp",
+      "problemMatcher": []
+    },
+    {
+      "label": "Pytest",
+      "type": "shell",
+      "command": ". .venv/bin/activate && pytest -q",
+      "problemMatcher": ["$pytest"]
+    },
+    {
+      "label": "Transpile example",
+      "type": "shell",
+      "command": ". .venv/bin/activate && sqlp transpile --target=postgres examples/demo.sqlp",
+      "problemMatcher": []
+    }
+  ]
+}
+

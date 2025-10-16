@@ -1,0 +1,29 @@
+[build-system]
+requires = ["hatchling>=1.18.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "sqlp"
+version = "0.1.0"
+description = "SQL+: a tiny SQL superset with runtime IF/ELSE and transpiler"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+authors = [
+  { name = "SQL+ Authors" }
+]
+dependencies = [
+  "lark~=1.1",
+  "duckdb~=1.0",
+]
+
+[project.urls]
+Homepage = "https://example.com/sqlp"
+
+[project.scripts]
+sqlp = "sqlp.cli:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
