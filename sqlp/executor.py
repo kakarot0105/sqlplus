@@ -4,6 +4,7 @@ import re
 from typing import Optional
 
 import duckdb
+import pandas as pd
 
 from .ast import Script, RawSQL, IfStmt, Stmt
 
@@ -62,3 +63,41 @@ class Executor:
             return val != 0 and val is not False
         return bool(val)
 
+    # Optional: execute and capture last SELECT result as DataFrame
+    def execute_with_result(self, script: Script, conn: Optional[duckdb.DuckDBPyConnection] = None) -> tuple[duckdb.DuckDBPyConnection, Optional[pd.DataFrame]]:
+        conn = self._ensure_conn(conn)
+        last_df = self._exec_stmts_capture(script.stmts, conn)
+        return conn, last_df
+
+    def _exec_stmts_capture(self, stmts: list[Stmt], conn: duckdb.DuckDBPyConnection):
+        last_df: Optional[pd.DataFrame] = None
+        for s in stmts:
+            if isinstance(s, RawSQL):
+                sql = s.sql.strip()
+                res = conn.execute(sql)
+                if re.match(r"(?is)^(SELECT|WITH)\b", sql):
+                    try:
+                        last_df = res.fetchdf()
+                    except Exception:
+                        last_df = None
+            elif isinstance(s, IfStmt):
+                last_df = self._exec_if_capture(s, conn)
+            else:
+                raise TypeError(f"Unknown statement type: {type(s)}")
+        return last_df
+
+    def _exec_if_capture(self, node: IfStmt, conn: duckdb.DuckDBPyConnection):
+        cond = node.condition_sql.strip()
+        if re.match(r"(?is)^(SELECT|WITH)\b", cond):
+            q = cond
+        else:
+            q = f"SELECT ({cond})"
+        res = conn.execute(q).fetchone()
+        val = res[0] if res is not None else None
+        truthy = self._truthy(val)
+        if truthy:
+            return self._exec_stmts_capture(node.then_block, conn)
+        else:
+            if node.else_block is not None:
+                return self._exec_stmts_capture(node.else_block, conn)
+        return None

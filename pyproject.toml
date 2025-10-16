@@ -15,6 +15,9 @@ authors = [
 dependencies = [
   "lark~=1.1",
   "duckdb~=1.0",
+  "pandas~=2.2",
+  "pyarrow>=14",
+  "streamlit~=1.38",
 ]
 
 [project.urls]
@@ -26,4 +29,3 @@ sqlp = "sqlp.cli:main"
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-q"
-

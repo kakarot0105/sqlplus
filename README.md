@@ -36,6 +36,23 @@ Quickstart
 
   pytest -q
 
+Streamlit App (Local UI)
+------------------------
+This repo includes a simple local UI to upload datasets and run SQL or SQL+ queries using DuckDB in-memory.
+
+Run it with:
+
+  streamlit run sqlp/app/app.py
+
+Features:
+- Upload CSV / Parquet / JSON.
+- Preview uploaded data.
+- Auto-register table name from filename.
+- SQL editor prefilled with `SELECT * FROM <table> LIMIT 10`.
+- Choose engine: DuckDB SQL or SQL+ runtime (DuckDB backend).
+- Run query and view results.
+- Download results as CSV.
+
 Notes on semantics
 ------------------
 - Conditions: If the condition starts with SELECT or WITH, the executor runs it and interprets the first cell of the first row for truthiness. Otherwise, the executor wraps the condition as SELECT (<expr>) to evaluate.
@@ -51,4 +68,3 @@ Repository Hygiene
 - Code lives under sqlp/ with modules: grammar, parser, ast, executor, compiler, cli.
 - Tests are under tests/ using pytest.
 - VS Code configs under .vscode/ for running tests and the example.
-
